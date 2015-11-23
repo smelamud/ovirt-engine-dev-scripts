@@ -1,0 +1,30 @@
+#!/bin/bash
+
+. `dirname $0`/engine-scripts-conf
+
+BINLINK=$HOME/bin/engine-bin
+
+setbinlink() {
+    [ -L $BINLINK ] && rm $BINLINK
+    if [ -e $BINLINK ]; then
+        echo "$BINLINK is not a symlink or cannot be removed" >&2
+        exit 1
+    fi
+    ln -s $1 $BINLINK
+}
+
+if [ -z "$1" ]; then
+    basename `engine-root`
+else
+    if [ "$1" == 'master' -o "$1" == 'current' -o "$1" == '0' ]; then
+        setbinlink $ENGINE_ROOT/master/bin
+    else
+        if [ ! -d "$ENGINE_ROOT/$1" ]; then
+            echo "unknown revision '$1': $ENGINE_ROOT/$1 does not exist" >&2
+            exit 1
+        fi
+        setbinlink $ENGINE_ROOT/$1/bin
+    fi
+fi
+
+exit 0

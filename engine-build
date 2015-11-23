@@ -1,0 +1,91 @@
+#!/bin/bash
+
+. `dirname $0`/engine-scripts-conf
+
+TARGETS='install-dev'
+PARAMS=''
+MESSAGE=''
+BUILD_ROOT=`engine-root`
+
+while getopts 'cdDhgr:t' KEY; do
+    case $KEY in
+        \?) exit 1
+        ;;
+
+        c) TARGETS="clean $TARGETS"
+        if [ -n "$MESSAGE" ]; then
+            MESSAGE="$MESSAGE and"
+        fi
+        MESSAGE="${MESSAGE} with cleaning"
+        ;;
+
+        d) PARAMS="$PARAMS DEV_BUILD_GWT_DRAFT=1"
+        if [ -n "$MESSAGE" ]; then
+            MESSAGE="$MESSAGE and"
+        fi
+        MESSAGE="${MESSAGE} with GWT draft"
+        ;;
+
+        D) PARAMS="$PARAMS DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS=-Dgwt.userAgent=gecko1_8"
+        if [ -n "$MESSAGE" ]; then
+            MESSAGE="$MESSAGE and"
+        fi
+        MESSAGE="${MESSAGE} for GWT debugging"
+        ;;
+
+        h) cat <<EOH
+Usage: engine-build [-cdDhgt] [-r <REV>]
+Build oVirt Engine.
+
+  -c        clean before building
+  -d        build without GWT optimizations (draft mode)
+  -D        build for GWT debugging
+  -h        display help
+  -g        build without GWT
+  -r <REV>  build for revision <REV> (builds under separate directory)
+  -t        build without tests
+EOH
+        exit 0
+        ;;
+
+        g) PARAMS="$PARAMS BUILD_GWT=0"
+        if [ -n "$MESSAGE" ]; then
+            MESSAGE="$MESSAGE and"
+        fi
+        MESSAGE="${MESSAGE} without GWT"
+        ;;
+
+        r) BUILD_ROOT="$ENGINE_ROOT/$OPTARG"
+        ;;
+
+        t) PARAMS="$PARAMS BUILD_UT=0"
+        if [ -n "$MESSAGE" ]; then
+            MESSAGE="$MESSAGE and"
+        fi
+        MESSAGE="${MESSAGE} without tests"
+        ;;
+    esac
+done
+
+REV=`engine-setrevision`
+
+case "$REV" in
+    3.5*) export JAVA_HOME=$JAVA_HOME_17
+    ;;
+
+    *) unset OVIRT_ENGINE_JAVA_HOME OVIRT_ENGINE_JAVA_HOME_FORCE JAVA_HOME
+    OVERLAY_CONF=$BUILD_ROOT/etc/ovirt-engine/engine.conf.d/20-setup-jboss-overlay.conf
+    if [ ! -f $OVERLAY_CONF ]; then
+        echo "ENGINE_JAVA_MODULEPATH=\"$WILDFLY_OVIRT_OVERLAY:\${ENGINE_JAVA_MODULEPATH}\"" \
+             > $OVERLAY_CONF
+    fi
+    ;;
+esac
+
+echo Running \'make $TARGETS PREFIX="$BUILD_ROOT" $PARAMS\'
+make $TARGETS PREFIX="$BUILD_ROOT" $PARAMS
+if [ $? -eq 0 ]; then
+    notify-send "Success building$MESSAGE" -i dialog-information
+else
+    notify-send "Errors building$MESSAGE" -i dialog-error
+fi

@@ -1,0 +1,31 @@
+#!/bin/bash
+
+IPTABLES_CONFIG=/etc/sysconfig/iptables
+
+if [ `whoami` != 'root' ]; then
+    echo 'vdsm-build: you must be root to run this' >&2
+    exit 1
+fi
+
+if [ ! -e $IPTABLES_CONFIG ]; then
+    echo 'vdsm-build: iptables config file does not exist' >&2
+    exit 1
+fi
+
+if ! grep 16509 $IPTABLES_CONFIG &>/dev/null; then
+    while read s; do
+        case "$s" in
+            *libvirt*) 
+                echo '# libvirt non-tls'
+                echo '-A INPUT -p tcp --dport 16509 -j ACCEPT'
+                echo
+            ;;
+        esac
+        echo $s
+    done <$IPTABLES_CONFIG >${IPTABLES_CONFIG}.new
+    mv $IPTABLES_CONFIG ${IPTABLES_CONFIG}.vdsm-fix-firewall
+    mv ${IPTABLES_CONFIG}.new $IPTABLES_CONFIG
+    service iptables restart
+fi
+
+exit 0

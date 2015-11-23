@@ -1,0 +1,38 @@
+#!/bin/bash
+
+. `dirname $0`/engine-scripts-conf
+
+BUILD_ROOT=`engine-root`
+
+while getopts 'hr:' KEY; do
+    case $KEY in
+        \?) exit 1
+        ;;
+
+        h) cat <<EOH
+Usage: engine [-h] [-r <REV>]
+Build oVirt Engine.
+
+  -h        display help
+  -r <REV>  run revision <REV> (go to subdirectory)
+EOH
+        exit 0
+        ;;
+
+        r) BUILD_ROOT="$ENGINE_ROOT/$OPTARG"
+        ;;
+    esac
+done
+
+REV=`engine-setrevision`
+
+case "$REV" in
+    3.5*) export OVIRT_ENGINE_JAVA_HOME=$JAVA_HOME_17
+          export OVIRT_ENGINE_JAVA_HOME_FORCE=1
+    ;;
+
+    *) unset OVIRT_ENGINE_JAVA_HOME OVIRT_ENGINE_JAVA_HOME_FORCE JAVA_HOME
+    ;;
+esac
+
+$BUILD_ROOT/share/ovirt-engine/services/ovirt-engine/ovirt-engine.py start

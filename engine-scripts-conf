@@ -1,0 +1,11 @@
+# Engine root directory (must exist)
+ENGINE_ROOT=$HOME/engine-root
+
+# Path to WildFly oVirt overlay modules directory
+WILDFLY_OVIRT_OVERLAY=/usr/share/ovirt-engine-wildfly-overlay/modules
+
+# Path to JRE 1.7 (needed to run oVirt 3.5)
+JAVA_HOME_17=/usr/java/jdk1.7.0_80
+
+# Path to JBoss 7.1 (needed to run oVirt 3.5)
+JBOSS_HOME_71=/usr/share/ovirt-engine-jboss-as

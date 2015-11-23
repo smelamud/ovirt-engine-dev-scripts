@@ -1,0 +1,4 @@
+#!/bin/bash
+
+make gwt-debug PREFIX=`engine-root` DEBUG_MODULE="webadmin" \
+    DEV_EXTRA_BUILD_FLAGS_GWT_DEFAULTS="-Dgwt.userAgent=gecko1_8"

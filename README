@@ -1,0 +1,45 @@
+oVirt Engine Development Scripts
+================================
+
+These are scripts that I'm using for oVirt Engine development. Maybe they will
+save your time too or at least will be helpful for newbies.
+
+The scripts assume the following setup: there is a directory for the Engine
+(set by ENGINE_ROOT conf var). Subdirectories under it correspond to revisions
+(master, 3.6, 3.5 etc.). You can freely add suffixes (e.g. 3.6-upgr). There is
+always a current revision you're working on and ~/bin/engine-bin is set to the
+corresponding bin/ directory. I've added ~/bin/engine-bin to PATH and now if I
+run, for example, engine-setup, it runs engine-setup of the revision I need
+currently.
+
+Config file:
+
+engine-scripts-conf - review it shortly just in case you need to change
+        something to fit your setup
+
+Scripts:
+
+engine - run the Engine
+engine-autosetup - run engine-setup (taking into account additional options
+        that should be passed for 3.5, for example)
+engine-build - build the Engine (this script has many options)
+engine-dao-tests - run DAO tests
+engine-gwt-debug - run the frontend in GWT debugging mode (there are also
+        several options in engine-build for GWT debugging)
+engine-root - print current Engine root directory name
+engine-setrevision - set or print the current revision
+
+And one script for VDSM - it should be run on a host:
+
+vdsm-deploy - removes old VDSM rpms, builds and installs the new ones,
+        puts ssl=false into vdsm.conf and restarts VDSM. If restart fails, runs
+        vdsm-tool configure --force and tries to start again. Maybe some of
+        these operations are redundant, but at the end I always get working
+        VDSM ;)
+
+vdsm-fix-firewall - fixes /etc/sysconfig/iptables to open non-TLS libvirtd
+        port. It is run automatically from vdsm-deploy, but may be run
+        separately.
+
+For any comments, suggestions, praises and bug reports please refer the public
+GitHub page at https://github.com/dvsl/ovirt-engine-dev-scripts

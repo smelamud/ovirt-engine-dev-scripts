@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. `dirname $0`/engine-scripts-conf
+
+REV=`engine-setrevision`
+
+case "$REV" in
+    3.5*) engine-setup --jboss-home="$JBOSS_HOME_71" $*
+    ;;
+
+    *) engine-setup $*
+    ;;
+esac

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+REV=
+if [ -L $HOME/bin/engine-bin ]; then
+    REV=`readlink $HOME/bin/engine-bin`
+    REV=`dirname $REV`
+    REV=`basename $REV`
+fi
+if [ -n "$REV" ]; then
+    echo "$ENGINE_ROOT/$REV"
+else
+    echo "$ENGINE_ROOT/master"
+fi
