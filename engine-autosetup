@@ -5,7 +5,9 @@
 REV=`engine-setrevision`
 
 case "$REV" in
-    3.5*) engine-setup --jboss-home="$JBOSS_HOME_71" $*
+    3.5*) export OVIRT_ENGINE_JAVA_HOME=$JAVA_HOME_17
+    export OVIRT_ENGINE_JAVA_HOME_FORCE=1
+    engine-setup --jboss-home="$JBOSS_HOME_71" $*
     ;;
 
     *) engine-setup $*
