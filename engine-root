@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. `dirname $0`/engine-scripts-conf
+
 REV=
 if [ -L $HOME/bin/engine-bin ]; then
     REV=`readlink $HOME/bin/engine-bin`
