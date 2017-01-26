@@ -41,5 +41,11 @@ vdsm-fix-firewall - fixes /etc/sysconfig/iptables to open non-TLS libvirtd
         port. It is run automatically from vdsm-deploy, but may be run
         separately.
 
+Scripts for Git:
+
+git-rebase-all - rebases many branches at once - one over another. List of
+        branches is passed on stdin, one name per line. The first branch is
+        rebased over master, the second - over the first and so on.
+
 For any comments, suggestions, praises and bug reports please refer the public
 GitHub page at https://github.com/dvsl/ovirt-engine-dev-scripts

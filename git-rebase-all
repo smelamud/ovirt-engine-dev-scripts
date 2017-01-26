@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ ! -x .git/ ]; then
+    echo 'Git working tree is not found.' >&2
+    exit 2;
+fi
+
+PREV=master
+while read NEXT; do
+    echo "*** Processing branch $NEXT..."
+    PREV_HASH=`cat .git/refs/heads/$PREV`
+    NEXT_PARENT_HASH=`git log $NEXT^^..$NEXT^|grep ^commit|cut -d ' ' -f 2-2`
+    if [ "$PREV_HASH" != "$NEXT_PARENT_HASH" ]; then
+        git rebase --onto $PREV $NEXT^ $NEXT || exit 1
+    fi
+    PREV=$NEXT
+done
+
+exit 0
