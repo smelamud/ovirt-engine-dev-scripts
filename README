@@ -29,7 +29,7 @@ engine-gwt-debug - run the frontend in GWT debugging mode (there are also
 engine-root - print current Engine root directory name
 engine-setrevision - set or print the current revision
 
-And one script for VDSM - it should be run on a host:
+Scripts for VDSM, they should be run on a host:
 
 vdsm-deploy - removes old VDSM rpms, builds and installs the new ones,
         puts ssl=false into vdsm.conf and restarts VDSM. If restart fails, runs
