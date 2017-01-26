@@ -26,7 +26,8 @@ service vdsmd stop
 yum -y remove `yum list installed|grep ^vdsm|cut -f 1-1 -d ' '`
 yum -y install x86_64/* noarch/vdsm-[0-9]* noarch/vdsm-xml* noarch/vdsm-cli* \
     noarch/vdsm-python-zombiereaper* noarch/vdsm-*jsonrpc* noarch/vdsm-python* \
-    noarch/vdsm-infra* noarch/vdsm-api* noarch/vdsm-hook-vmfex-dev*
+    noarch/vdsm-infra* noarch/vdsm-api* noarch/vdsm-hook-vmfex-dev* \
+    noarch/vdsm-xmlrpc*
 
 sed -i -e '/^[ #]*ssl *= *true/s/^.*$/ssl = false/' /etc/vdsm/vdsm.conf
 vdsm-fix-firewall
