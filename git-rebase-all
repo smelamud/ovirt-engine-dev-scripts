@@ -5,10 +5,13 @@ if [ ! -x .git/ ]; then
     exit 2;
 fi
 
-PREV=master
+PREV=$1
+if [ -z "$PREV" ]; then
+    PREV=master
+fi
 while read NEXT; do
     echo "*** Processing branch $NEXT..."
-    PREV_HASH=`cat .git/refs/heads/$PREV`
+    PREV_HASH=`git log $PREV^..$PREV|grep ^commit|cut -d ' ' -f 2-2`
     NEXT_PARENT_HASH=`git log $NEXT^^..$NEXT^|grep ^commit|cut -d ' ' -f 2-2`
     if [ "$PREV_HASH" != "$NEXT_PARENT_HASH" ]; then
         git rebase --onto $PREV $NEXT^ $NEXT || exit 1
